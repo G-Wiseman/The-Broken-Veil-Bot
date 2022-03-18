@@ -4,6 +4,10 @@ import discord
 import json
 
 def get_key():
+    """
+    Reads the key to log into the Baator Bot, from  config.json,
+    since this is going on Github.
+    """
     j_handle = open("config.json")
     config = json.load(j_handle)
     j_handle.close()
