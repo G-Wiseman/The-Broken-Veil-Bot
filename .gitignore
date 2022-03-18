@@ -1,6 +1,9 @@
 # Discord Key should not be shared on Github
 config.json
 
+# Don't care about Mac formatting
+.DS_Store
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
