@@ -1,6 +1,8 @@
+#!/usr/bin/env python3
 import discord
 import os
 import botlogic
+import json
 
 
 client = discord.Client()
@@ -23,4 +25,5 @@ async def on_message(message):
     if "<:Chihuaxander:951361274774716486>" in message.content:
         await message.delete()
 
-client.run("NOPE, I'm dumb don't post this...")
+key = botlogic.get_key()
+client.run(key)
