@@ -2,6 +2,7 @@ import dice
 import os
 import discord
 import json
+import datetime
 
 def get_key():
     """

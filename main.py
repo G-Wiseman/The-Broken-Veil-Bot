@@ -3,6 +3,7 @@ import discord
 import os
 import botlogic
 import json
+import datetime
 
 
 client = discord.Client()
