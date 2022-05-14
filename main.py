@@ -1,30 +1,29 @@
 #!/usr/bin/env python3
 import discord
+from discord.ext import commands
 import os
 import botlogic
 import json
 import datetime
 
+bot = commands.Bot(command_prefix="!")
+bot.name = "Baator-Bot"
 
-client = discord.Client()
-
-@client.event
+@bot.event
 async def on_ready():
-    print('We have logged in as {0.user}'.format(client))
+    print(f"We have logged in as {bot.name}".format(client))
 
-@client.event
+@bot.event
 async def on_message(message):
-    if message.author == client.user:
+    if message.author == bot.user:
         return
-
-    if message.content.startswith("-"):
-        command = message.content[1:]
-        output = botlogic.commands(command)
-        if output != None:
-            await message.channel.send(output)
 
     if "<:Chihuaxander:951361274774716486>" in message.content:
         await message.delete()
 
+@bot.command(name="ping")
+async def some_crazy_function_name(ctx):
+	await ctx.channel.send("pong")
+
 key = botlogic.get_key()
-client.run(key)
+bot.run(key)

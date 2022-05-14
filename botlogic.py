@@ -19,3 +19,4 @@ def commands(command):
         return dice.rollstats()
     if command == "ping":
         return "<legham:939388158443941898>"
+    
