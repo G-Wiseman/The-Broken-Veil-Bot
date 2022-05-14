@@ -16,16 +16,6 @@ def four_six_drop():
     dropped = list.pop(0)
     return (dropped, list)
 
-def rollstats():
-    random.seed()
-    string = "Stats are\n-----------\n"
-    for loop in range(0,6):
-        dropped, three_six = four_six_drop()
-        stat = sum(three_six)
-        string += ("**" + str(stat) + "** ")
-        string += (str(three_six) + " {" + str(dropped) + "}\n")
-    return string
-
 def roll_print_single(num_dice, num_sides):
     message = ""
     sum = 0
