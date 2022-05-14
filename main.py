@@ -8,6 +8,7 @@ import datetime
 
 bot = commands.Bot(command_prefix='!')
 bot.name = "The Broken Veil"
+doggled = True #The Doggle is the toggle to remove any messages with the annoying dog emoji when it is toggled on
 
 @bot.event
 async def on_ready():
@@ -20,7 +21,7 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
-    if "<:Chihuaxander:951361274774716486>" in message.content:
+    if "<:Chihuaxander:951361274774716486>" in message.content and doggled:
         await message.delete()
 
 
@@ -41,6 +42,14 @@ async def nametest(ctx, real=False):
         sender_name = sender.display_name
     await ctx.send(sender_name)
 
+@bot.command(name="Doggle")
+async def blockChihuahua(ctx, switchDirection=None):
+    if switch == None:
+        doggled = not doggled
+    elif switchDirection.lower() == "on":
+        doggled = True
+    elif switchDirection.lower() == "off":
+        doggled = False
 
 key = botlogic.get_key()
 bot.run(key)
