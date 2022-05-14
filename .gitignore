@@ -1,5 +1,6 @@
-# Discord Key should not be shared on Github
+# XP bot data-base should not be shared on Github for privacy
 config.json
+XP.json
 
 # Don't care about Mac formatting
 .DS_Store

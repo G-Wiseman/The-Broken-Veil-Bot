@@ -7,7 +7,7 @@ import json
 import datetime
 
 bot = commands.Bot(command_prefix='!')
-bot.name = "Baator-Bot"
+bot.name = "The Broken Veil"
 
 @bot.event
 async def on_ready():
