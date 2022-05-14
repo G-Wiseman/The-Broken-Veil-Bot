@@ -6,9 +6,10 @@ import botlogic
 import json
 import datetime
 
+doggled = True #The Doggle is the toggle to remove any messages with the annoying dog emoji when it is toggled on
 bot = commands.Bot(command_prefix='!')
 bot.name = "The Broken Veil"
-doggled = True #The Doggle is the toggle to remove any messages with the annoying dog emoji when it is toggled on
+
 
 @bot.event
 async def on_ready():
@@ -44,12 +45,19 @@ async def nametest(ctx, real=False):
 
 @bot.command(name="Doggle")
 async def blockChihuahua(ctx, switchDirection=None):
-    if switch == None:
+    global doggled
+    if switchDirection == None:
         doggled = not doggled
     elif switchDirection.lower() == "on":
         doggled = True
     elif switchDirection.lower() == "off":
         doggled = False
+
+    if doggled == True:
+        on_off = "on"
+    else:
+        on_off = "off"
+    await ctx.send(f"The blocking has been doggled {on_off}")
 
 key = botlogic.get_key()
 bot.run(key)
