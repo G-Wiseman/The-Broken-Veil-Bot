@@ -1,0 +1,5 @@
+Commands:
+  - !Log CharacterName StatType Number
+  - !CreateCharacter CharacterName
+  - !Claim CharacterName
+  - 
