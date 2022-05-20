@@ -8,7 +8,7 @@ import datetime
 from Character import *
 
 doggled = False #The "Doggle" is the toggle to remove any messages with the annoying dog emoji when it is toggled on
-bot = commands.Bot(command_prefix='!')
+bot = commands.Bot(command_prefix='!', case_insensitive=True)
 bot.name = "The Broken Veil"
 
 
@@ -26,7 +26,6 @@ async def on_message(message):
 
     if "<:Chihuaxander:951361274774716486>" in message.content and doggled:
         await message.delete()
-
 
 @bot.command()
 async def ping(ctx):
@@ -62,8 +61,41 @@ async def blockChihuahua(ctx, switchDirection=None):
         on_off = "off"
     await ctx.send(f"The blocking has been doggled {on_off}")
 
-@bot.command(name="Log")
-async def logStats(ctx, char_name, type, count):
+@bot.command(name="log")
+async def logStats(ctx, char_name, type, count=1):
+
+    chars_dict = bl.unpickle("Character_Stats.pkl")
+
+    if (chars_dict == None) or (char_name not in chars_dict.keys()):
+        await ctx.send(f"**Failed** The character {char_name} doesn't exist.")
+        return
+
+    found_char = chars_dict[char_name]
+
+    updated_char = bl.handle_log(found_char, type, count)
+
+    chars_dict[char_name] = updated_char
+
+    with open("Character_Stats.pkl", "wb") as pkl_file:
+        pickle.dump(chars_dict, pkl_file, -1)
+
+    await ctx.send(f"{type} has been logged for {char_name}")
+    return
+
+@bot.command(name="ShowStats")
+async def show_character_stat_display(ctx, char_name):
+
+    chars_dict = bl.unpickle("Character_Stats.pkl")
+    if (chars_dict == None) or (char_name not in chars_dict.keys()):
+        await ctx.send(f"**Failed** The character {char_name} doesn't exist.")
+        return
+
+    character = chars_dict[char_name]
+    await ctx.send(character.show_current_stats())
+
+@bot.command(name="DeleteCharacter")
+async def delete_char(ctx, char_name):
+    await ctx.send("Hasn't been implemented yet. Go bug George...")
     return
 
 @bot.command(name="CreateCharacter")
@@ -77,27 +109,24 @@ async def create_character_stats_sheet(ctx, char_name=None, char_specific_stat=N
         return
 
     caller_id = ctx.author.id
-    with open("Character_Stats.pkl", "rb") as pkl_file:
-        try:
-            char_dict = pickle.load(pkl_file)
-        except EOFError as e:
-            print(e)
-            char_dict = {}
+    chars_dict = bl.unpickle("Character_Stats.pkl")
+    if chars_dict == None:
+        chars_dict = {}
 
     #Check if the character already exists
-    if char_name not in char_dict.keys():
+    if char_name not in chars_dict.keys():
         #Add the character to the dictionary
         new_char = Character(char_name, specific_stat=char_specific_stat, owner=caller_id)
         new_char_temp_dict = {new_char._name : new_char}
-        char_dict.update(new_char_temp_dict)
+        chars_dict.update(new_char_temp_dict)
     else:
-        #Alert the user that the character already exists, then abor
+        #Alert the user that the character already exists, then abort
         await ctx.send(f"Cannot Create Character. The character {char_name} already exists.\nUse **!DeleteCharacter \"{char_name}\"** to delete the character that already exists.")
         return
 
 
     with open("Character_Stats.pkl", "wb") as pkl_file:
-            pickle.dump(char_dict, pkl_file, -1)
+            pickle.dump(chars_dict, pkl_file, -1)
 
 
     await ctx.send(f"{char_name} created, with a personalized stat of {char_specific_stat}")

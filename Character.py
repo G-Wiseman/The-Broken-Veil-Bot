@@ -20,5 +20,15 @@ class Character:
     def __repr__(self):
         return f"Character named {self._name}"
 
-    def set_specific_stat(self, new_specific):
-        self._chara_specific_type = new_specific
+    def show_current_stats(self):
+        dashline = '-'*len(self._name)
+        stats_display = f"{self._name}\n{dashline}\n"
+        stats_display += f"Kills: {self._kills}\n"
+        stats_display += f"Times unconscious: {self._unconc}\n"
+        stats_display += f"Deaths: {self._deaths}\n"
+        stats_display += f"Max Damage done in a turn: {self._max_damage_dealt}\n"
+        stats_display += f"Healing Dealt: {self._healing_dealt}\n"
+        stats_display += f"Natural Twenties: {self._crit_success}\n"
+        stats_display += f"Natural Ones: {self._crit_fail}\n"
+        stats_display += f"{self._chara_specific_type} : {self._chara_specific_count}\n"
+        return stats_display
