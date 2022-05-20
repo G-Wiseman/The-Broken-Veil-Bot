@@ -2,7 +2,7 @@
 import discord
 from discord.ext import commands
 import os
-import botlogic
+import botlogic as bl
 import pickle
 import datetime
 from Character import *
@@ -34,7 +34,7 @@ async def ping(ctx):
 
 @bot.command(name="roll-stats")
 async def roll_character_stats(ctx):
-    await ctx.send(botlogic.rollstats())
+    await ctx.send(bl.rollstats())
 
 @bot.command(name="NameTest")
 async def nametest(ctx, real=False):
@@ -84,19 +84,25 @@ async def create_character_stats_sheet(ctx, char_name=None, char_specific_stat=N
             print(e)
             char_dict = {}
 
+    #Check if the character already exists
+    if char_name not in char_dict.keys():
+        #Add the character to the dictionary
         new_char = Character(char_name, specific_stat=char_specific_stat, owner=caller_id)
         new_char_temp_dict = {new_char._name : new_char}
-
         char_dict.update(new_char_temp_dict)
+    else:
+        #Alert the user that the character already exists, then abor
+        await ctx.send(f"Cannot Create Character. The character {char_name} already exists.\nUse **!DeleteCharacter \"{char_name}\"** to delete the character that already exists.")
+        return
 
-        print(char_dict)
 
     with open("Character_Stats.pkl", "wb") as pkl_file:
-        pickle.dump(char_dict, pkl_file, -1)
+            pickle.dump(char_dict, pkl_file, -1)
+
 
     await ctx.send(f"{char_name} created, with a personalized stat of {char_specific_stat}")
     return
 
 
-key = botlogic.get_key()
+key = bl.get_key()
 bot.run(key)
