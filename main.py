@@ -3,7 +3,7 @@ import discord
 from discord.ext import commands
 import os
 import botlogic
-import json
+import pickle
 import datetime
 from Character import *
 
@@ -77,27 +77,22 @@ async def create_character_stats_sheet(ctx, char_name=None, char_specific_stat=N
         return
 
     caller_id = ctx.author.id
-    new_char = Character(char_name, specific_stat=char_specific_stat, owner=caller_id)
+    with open("Character_Stats.pkl", "rb") as pkl_file:
+        try:
+            char_dict = pickle.load(pkl_file)
+        except EOFError as e:
+            print(e)
+            char_dict = {}
 
-    file =  open("Characters.json", "w+")
-    lines = file.readlines()
-    print(lines)
-    number_of_lines = len(file.readlines())
-    if number_of_lines != 0:
-        file.seek(0)
-        file_data = json.load(file)
-        print(number_of_lines)
-    else:
-        print("IN THE ELSE BLOCK")
-        file_data = {}
+        new_char = Character(char_name, specific_stat=char_specific_stat, owner=caller_id)
+        new_char_temp_dict = {new_char._name : new_char}
 
-    json_new_char = new_char.json_prepare()
-    print(file_data)
-    file_data.update(json_new_char)
-    dump = json.dumps(file_data)
-    file.write(dump)
-    file.close()
+        char_dict.update(new_char_temp_dict)
 
+        print(char_dict)
+
+    with open("Character_Stats.pkl", "wb") as pkl_file:
+        pickle.dump(char_dict, pkl_file, -1)
 
     await ctx.send(f"{char_name} created, with a personalized stat of {char_specific_stat}")
     return
