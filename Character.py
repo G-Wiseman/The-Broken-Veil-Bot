@@ -21,20 +21,21 @@ class Character:
         self._chara_specific_type = new_specific
 
     def json_prepare(self):
-        new_dict = {"name":self._name}
-        new_dict["kills"] = self._kills
-        new_dict["unconc"] = self._unconc
-        new_dict["deaths"] = self._deaths
-        new_dict["final_kills"] = self._final_kills
-        new_dict["max_damage"] = self._max_damage_dealt
-        new_dict["healing_dealt"] = self._healing_dealt
-        new_dict["crit_success"] = self._crit_success
-        new_dict["crit_fail"] = self._crit_fail
-        new_dict["spec_count"] = self._chara_specific_count
-        new_dict["spec_type"] = self._chara_specific_type
-        new_dict["owner"] = self.owner_id
+        info_dict = {"kills": self._kills}
+        info_dict["unconc"] = self._unconc
+        info_dict["deaths"] = self._deaths
+        info_dict["final_kills"] = self._final_kills
+        info_dict["max_damage"] = self._max_damage_dealt
+        info_dict["healing_dealt"] = self._healing_dealt
+        info_dict["crit_success"] = self._crit_success
+        info_dict["crit_fail"] = self._crit_fail
+        info_dict["spec_count"] = self._chara_specific_count
+        info_dict["spec_type"] = self._chara_specific_type
+        info_dict["owner"] = self.owner_id
 
-        return new_dict
+
+        char_dict = {self._name: info_dict}
+        return char_dict
 
 
 def json_rebuild(input_dict) -> Character:

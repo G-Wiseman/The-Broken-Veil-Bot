@@ -77,21 +77,26 @@ async def create_character_stats_sheet(ctx, char_name=None, char_specific_stat=N
         return
 
     caller_id = ctx.author.id
-    new_char = Character(char_name, specific_stat=char_name, owner=caller_id)
+    new_char = Character(char_name, specific_stat=char_specific_stat, owner=caller_id)
 
-    with open("Characters.json", "w+") as file:
-        try:
-            file_data = json.load(file)
-        except Exception as e:
-            print(e)
-            file_data = {}
+    file =  open("Characters.json", "w+")
+    lines = file.readlines()
+    print(lines)
+    number_of_lines = len(file.readlines())
+    if number_of_lines != 0:
+        file.seek(0)
+        file_data = json.load(file)
+        print(number_of_lines)
+    else:
+        print("IN THE ELSE BLOCK")
+        file_data = {}
 
-        json_new_char = new_char.json_prepare()
-        print(file_data)
-
-        file_data.update(json_new_char)
-        dump = json.dumps(file_data)
-        file.write(dump)
+    json_new_char = new_char.json_prepare()
+    print(file_data)
+    file_data.update(json_new_char)
+    dump = json.dumps(file_data)
+    file.write(dump)
+    file.close()
 
 
     await ctx.send(f"{char_name} created, with a personalized stat of {char_specific_stat}")
