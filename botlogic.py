@@ -100,6 +100,14 @@ def unpickle(filename):
             print(e)
             return None
 
+def repickle(obj, filename:str) ->None:
+    """
+    Stores a Python object into a pkl file. Overwrites anything currently
+    in the file.
+    """
+    with open(filename, "wb") as pkl_file:
+            pickle.dump(obj, pkl_file, -1)
+
 def rollstats():
     string = "Stats are\n-----------\n"
     for loop in range(0,6):

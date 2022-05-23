@@ -77,8 +77,7 @@ async def logStats(ctx, char_name, type, count=1):
 
     chars_dict[char_name] = updated_char
 
-    with open("Character_Stats.pkl", "wb") as pkl_file:
-        pickle.dump(chars_dict, pkl_file, -1)
+    bl.repickle(chars_dict, "Character_Stats.pkl")
 
     await ctx.send(f"{count} {logged_type}(s) has been logged for {char_name}")
     return
@@ -127,8 +126,7 @@ async def create_character_stats_sheet(ctx, char_name=None, char_specific_stat=N
         return
 
 
-    with open("Character_Stats.pkl", "wb") as pkl_file:
-            pickle.dump(chars_dict, pkl_file, -1)
+    bl.repickle(chars_dict, "Character_Stats.pkl")
 
 
     await ctx.send(f"{char_name} created, with a personalized stat of {char_specific_stat}")
