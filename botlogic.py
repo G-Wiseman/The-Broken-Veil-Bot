@@ -9,7 +9,7 @@ import discord
 import json
 import datetime
 import pickle
-import Character
+from Character import *
 
 
 def is_char_owner(author, character)->bool:
@@ -21,6 +21,10 @@ def is_char_owner(author, character)->bool:
     return author.id == character.owner_id
 
 def create_alias_dict():
+    """
+    Creates a dictionary of all the different allowed
+    ways of specifying which stat is being referred to.
+    """
     kill_alias =        ['kill', 'kills']
     unconc_alias =      ['ko', 'uncon', 'unconc', 'unc', 'unconscious', 'knocked', 'down']
     death_alias =       ['dead', 'death', 'deaths', 'died']
@@ -43,6 +47,9 @@ def create_alias_dict():
     return alias_dict
 
 def handle_log(character, type, count):
+    """
+    Handles the logging stats logic.
+    """
 
     alias_dict = create_alias_dict()
     logged_type = None
@@ -87,8 +94,9 @@ def handle_log(character, type, count):
 
 def get_key():
     """
-    Reads the key to log into the Baator Bot, from  config.json,
-    since this is going on Github.
+    Reads the key to log into the Baator Bot, from .env,
+    since this is going on Github. Wouldn't want to share the
+    key that gives access to my bot.
     """
     j_handle = open(".env")
     config = json.load(j_handle)
@@ -108,7 +116,7 @@ def unpickle(filename):
             print(e)
             return None
 
-def repickle(obj, filename:str) ->None:
+def repickle(obj, filename:str)->None:
     """
     Stores a Python object into a pkl file. Overwrites anything currently
     in the file.
@@ -116,7 +124,7 @@ def repickle(obj, filename:str) ->None:
     with open(filename, "wb") as pkl_file:
             pickle.dump(obj, pkl_file, -1)
 
-def rollstats():
+def rollstats() -> str:
     string = "Stats are\n-----------\n"
     for loop in range(0,6):
         dropped, three_six = dice.four_six_drop()
