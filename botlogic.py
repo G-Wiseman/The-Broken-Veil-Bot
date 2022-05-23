@@ -12,6 +12,14 @@ import pickle
 import Character
 
 
+def is_char_owner(author, character)->bool:
+    """
+    Determines if a user is the owner of a character.
+    Returns True if the the user is the owner.
+    False otherwise.
+    """
+    return author.id == character.owner_id
+
 def create_alias_dict():
     kill_alias =        ['kill', 'kills']
     unconc_alias =      ['ko', 'uncon', 'unconc', 'unc', 'unconscious', 'knocked', 'down']
