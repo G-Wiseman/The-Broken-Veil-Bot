@@ -1,8 +1,8 @@
 # XP bot data-base should not be shared on Github for privacy
-config.json
-XP.json
 # Using pkl to be the database files, don't share these
 *.pkl
+*.docx
+
 
 # Don't care about Mac formatting
 .DS_Store
