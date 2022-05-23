@@ -142,6 +142,26 @@ async def char_list_output(ctx):
 
     await ctx.send(output_string)
 
+@bot.command(name="BackupData")
+async def backup_char_data(ctx):
+
+    chars_dict = bl.unpickle("Character_Stats.pkl")
+    backup_text = ""
+    for character in chars_dict:
+        backup_text += character.show_current_stats()
+
+    # Creates a readable overview of the character data
+    backup_name = bl.create_backup_title(ctx.guild, ".txt")
+    with open(backup_name, "w+") as backup_file:
+        backup_file.write(backup_text)
+
+    #Creates a back up of the pkl file as well
+    backup_pickle_name = bl.create_backup_title(ctx.guild, ".pkl")
+    bl.repickle(chars_dict, backup_pickle_name)
+
+    await ctx.send(f"Created back up files {backup_name} and {backup_pickle_name}")
+
+
 
 
 

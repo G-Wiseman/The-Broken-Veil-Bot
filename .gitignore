@@ -1,7 +1,7 @@
 # XP bot data-base should not be shared on Github for privacy
 # Using pkl to be the database files, don't share these
 *.pkl
-*.docx
+*BACKUP.txt
 
 
 # Don't care about Mac formatting

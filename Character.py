@@ -4,7 +4,7 @@ class Character:
 
         self._name = name # Sets the name of the character
 
-        # Set all the new character's stats to 
+        # Set all the new character's stats to
         self._kills = 0
         self._unconc = 0
         self._deaths = 0
@@ -18,10 +18,10 @@ class Character:
         self._chara_specific_count = 0
         self._chara_specific_type = specific_stat
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Character named {self._name}"
 
-    def show_current_stats(self):
+    def show_current_stats(self) -> str:
         dashline = '--'*len(self._name)
         stats_display = f"{self._name}\n{dashline}\n"
         stats_display += f"Kills: {self._kills}\n"

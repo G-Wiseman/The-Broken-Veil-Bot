@@ -17,7 +17,7 @@ def create_guild_stats_title(guild):
     """
     return str(guild.id) + "STATS.pkl"
 
-def create_backup_title(guild):
+def create_backup_title(guild, extension):
     """
     Creates a back-up file title, based on the
     guild and the time the back-up was created to
@@ -26,7 +26,7 @@ def create_backup_title(guild):
 
     time = strftime("%d-%m-%Y %H.%M.%S")
     guild_title = guild.name + str(guild.id)
-    title = time + guild_title + "BACKUP.txt"
+    title = time + guild_title + "BACKUP" + extension
 
 
 
