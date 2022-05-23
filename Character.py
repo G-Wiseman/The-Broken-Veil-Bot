@@ -21,7 +21,7 @@ class Character:
         return f"Character named {self._name}"
 
     def show_current_stats(self):
-        dashline = '-'*len(self._name)
+        dashline = '--'*len(self._name)
         stats_display = f"{self._name}\n{dashline}\n"
         stats_display += f"Kills: {self._kills}\n"
         stats_display += f"Times unconscious: {self._unconc}\n"

@@ -65,6 +65,7 @@ async def blockChihuahua(ctx, switchDirection=None):
 async def logStats(ctx, char_name, type, count=1):
 
     chars_dict = bl.unpickle("Character_Stats.pkl")
+    char_name = char_name.lower()
 
     if (chars_dict == None) or (char_name not in chars_dict.keys()):
         await ctx.send(f"**Failed** The character {char_name} doesn't exist.")
@@ -72,18 +73,19 @@ async def logStats(ctx, char_name, type, count=1):
 
     found_char = chars_dict[char_name]
 
-    updated_char = bl.handle_log(found_char, type, count)
+    updated_char, logged_type = bl.handle_log(found_char, type, count)
 
     chars_dict[char_name] = updated_char
 
     with open("Character_Stats.pkl", "wb") as pkl_file:
         pickle.dump(chars_dict, pkl_file, -1)
 
-    await ctx.send(f"{type} has been logged for {char_name}")
+    await ctx.send(f"{count} {logged_type}(s) has been logged for {char_name}")
     return
 
 @bot.command(name="ShowStats")
 async def show_character_stat_display(ctx, char_name):
+    char_name = char_name.lower()
 
     chars_dict = bl.unpickle("Character_Stats.pkl")
     if (chars_dict == None) or (char_name not in chars_dict.keys()):
@@ -105,7 +107,7 @@ async def create_character_stats_sheet(ctx, char_name=None, char_specific_stat=N
         return
 
     if char_specific_stat== None:
-        await ctx.send("Your Character could use a personalized stat\n Try !CreateCharacter \"Character Name\" \"Name of Personalized Stat\"")
+        await ctx.send("**Failed** Your Character could use a personalized stat\nTry !CreateCharacter \"Character Name\" \"Name of Personalized Stat\"")
         return
 
     caller_id = ctx.author.id
@@ -117,7 +119,7 @@ async def create_character_stats_sheet(ctx, char_name=None, char_specific_stat=N
     if char_name not in chars_dict.keys():
         #Add the character to the dictionary
         new_char = Character(char_name, specific_stat=char_specific_stat, owner=caller_id)
-        new_char_temp_dict = {new_char._name : new_char}
+        new_char_temp_dict = {new_char._name.lower() : new_char}
         chars_dict.update(new_char_temp_dict)
     else:
         #Alert the user that the character already exists, then abort
@@ -131,6 +133,20 @@ async def create_character_stats_sheet(ctx, char_name=None, char_specific_stat=N
 
     await ctx.send(f"{char_name} created, with a personalized stat of {char_specific_stat}")
     return
+
+@bot.command(name="CharacterList")
+async def char_list_output(ctx):
+
+    chars_dict = bl.unpickle("Character_Stats.pkl")
+    output_string = "Characters in this server\n-----\n"
+    for character in chars_dict.values():
+        output_string += f"{character._name}: Personal Stat is *{character._chara_specific_type}*\n"
+
+    await ctx.send(output_string)
+
+
+
+
 
 
 key = bl.get_key()
