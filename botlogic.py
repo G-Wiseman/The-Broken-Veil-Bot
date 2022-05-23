@@ -7,9 +7,27 @@ import dice
 import os
 import discord
 import json
-import datetime
+from datetime import datetime
 import pickle
 from Character import *
+
+def create_guild_stats_title(guild):
+    """
+    Creates the name of a file for a guild's character stats file
+    """
+    return str(guild.id) + "STATS.pkl"
+
+def create_backup_title(guild):
+    """
+    Creates a back-up file title, based on the
+    guild and the time the back-up was created to
+    avoid any possible overwriting of files
+    """
+
+    time = strftime("%d-%m-%Y %H.%M.%S")
+    guild_title = guild.name + str(guild.id)
+    title = time + guild_title + "BACKUP.txt"
+
 
 
 def is_char_owner(author, character)->bool:
