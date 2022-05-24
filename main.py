@@ -157,8 +157,6 @@ async def backup_char_data(ctx):
     for character in chars_dict.values():
         backup_text += character.show_current_stats()
 
-    print(f"Backup text is {backup_text}")
-
     # Creates a readable overview of the character data
     backup_name = bl.create_backup_title(ctx.guild, ".txt")
     with open("BACKUPS/"+backup_name, "w+") as backup_file:
@@ -166,7 +164,7 @@ async def backup_char_data(ctx):
 
     #Creates a back up of the pkl file as well
     backup_pickle_name = bl.create_backup_title(ctx.guild, ".pkl")
-    bl.repickle(chars_dict, backup_pickle_name)
+    bl.repickle(chars_dict, "BACKUPS/"+backup_pickle_name)
 
     await ctx.send(f"Created back up files {backup_name} and {backup_pickle_name}")
 
