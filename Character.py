@@ -77,6 +77,17 @@ class Character:
     def set_deaths(self, new_value:int):
         self._crit_fail = new_value
 
+    def get_spec_type(self):
+        return self._chara_specific_type
+    def set_deaths(self, new_value:str):
+        self._chara_specific_type = new_value
+
+    def get_spec_count(self):
+        return self._chara_specific_count
+    def set_spec_count(self, new_value:int):
+        self._chara_specific_count = new_value
+
+
 def remake_char(old_char)->Character:
     """
     Remakes the character object, allowing for changes to be

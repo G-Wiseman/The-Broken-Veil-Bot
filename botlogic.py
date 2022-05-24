@@ -19,6 +19,59 @@ def guild_filename(guild, extension):
     title = guild_title + "STATS" + extension
     return title
 
+def set_get_type(type):
+    setter = None
+    getter = None
+    official_type = None
+
+    if type.lower() in alias_dict["kill_alias"]:
+        official_type = "Kill"
+        getter = Character.get_kills
+        setter = Character.set_kills
+
+    elif type.lower() in alias_dict["unconc_alias"]:
+        official_type = "Time Unconscious"
+        getter = Character.get_uncon
+        setter = Character.set_unconc
+
+    elif type.lower() in alias_dict["death_alias"]:
+        official_type = "Death"
+        getter = Character.get_deaths
+        setter = Character.set_deaths
+
+    elif type.lower() in alias_dict["final_alias"]:
+        official_type = "\"How do you want to this\""
+        getter = Character.get_finals
+        setter = Character.set_finals
+
+    elif type.lower() in alias_dict["max_damage_alias"]:
+        getter = Character.get_max_damage
+        setter = Character.set_max_damage
+        official_type = "Damage in a single turn"
+
+    elif type.lower() in alias_dict["healing_alias"]:
+        official_type = "Healing dealt"
+        getter = Character.get_healing
+        setter = Character.set_healing
+
+    elif type.lower() in alias_dict["crit_success_alias"]:
+        official_type = "Natural Twenty"
+        getter = Character.get_crit_success
+        setter = Character.set_crit_success
+
+    elif type.lower() in alias_dict["crit_fail_alias"]:
+        official_type = "Natural One"
+        getter = Character.get_crit_fail
+        setter = Character.set_crit_fail
+
+    elif type.lower() == character._chara_specific_type.lower():
+        official_type = character._chara_specific_type
+        setter = Character.set_spec_count
+        getter = Character.get_spec_count
+
+    return setter, getter, official_type
+
+
 def create_backup_title(guild, extension):
     """
     Creates a back-up file title, based on the
@@ -159,9 +212,6 @@ def char_class_refresh(guilds):
                 single_dict = {new_char._name: new_char}
                 new_dict.update(single_dict)
             repickle(new_dict, filename)
-
-
-
 
 def rollstats() -> str:
     string = "Stats are\n-----------\n"
