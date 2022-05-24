@@ -2,6 +2,8 @@
 # Using pkl to be the database files, don't share these
 *.pkl
 *BACKUP.txt
+BACKUP/
+
 
 
 # Don't care about Mac formatting

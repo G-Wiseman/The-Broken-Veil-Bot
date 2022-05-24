@@ -49,14 +49,14 @@ def remake_char(old_char)->Character:
     owner = old_char.owner_id
     new_char = Character(char_name, spec_stat_type, owner)
 
-    new_char._kills = old_char._kills
-    new_char._unconc = old_char._unconc
-    new_char._deaths = old_char._deaths
-    new_char._final_kills = old_char._final_kills
-    new_char._max_damage_dealt = old_char._max_damage_dealt
-    new_char._healing_dealt = old_char._healing_dealt
-    new_char._crit_success = old_char._crit_success
-    new_char._crit_fail = old_char._crit_fail
+    new_char._kills                = old_char._kills
+    new_char._unconc               = old_char._unconc
+    new_char._deaths               = old_char._deaths
+    new_char._final_kills          = old_char._final_kills
+    new_char._max_damage_dealt     = old_char._max_damage_dealt
+    new_char._healing_dealt        = old_char._healing_dealt
+    new_char._crit_success         = old_char._crit_success
+    new_char._crit_fail            = old_char._crit_fail
     new_char._chara_specific_count = old_char._chara_specific_count
 
     return new_char

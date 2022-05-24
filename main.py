@@ -14,7 +14,6 @@ bot.name = "The Broken Veil"
 
 @bot.event
 async def on_ready():
-
     print(f"We have logged in as {bot.name}".format())
 
 @bot.event
@@ -64,7 +63,8 @@ async def blockChihuahua(ctx, switchDirection=None):
 @bot.command(name="log")
 async def logStats(ctx, char_name, type, count=1):
 
-    chars_dict = bl.unpickle("Character_Stats.pkl")
+    guild_filename = bl.guild_filename(ctx.guild, ".pkl")
+    chars_dict = bl.unpickle(guild_filename)
     char_name = char_name.lower()
 
     if (chars_dict == None) or (char_name not in chars_dict.keys()):
@@ -77,7 +77,7 @@ async def logStats(ctx, char_name, type, count=1):
 
     chars_dict[char_name] = updated_char
 
-    bl.repickle(chars_dict, "Character_Stats.pkl")
+    bl.repickle(chars_dict, guild_filename)
 
     await ctx.send(f"{count} {logged_type}(s) has been logged for {char_name}")
     return
@@ -86,7 +86,8 @@ async def logStats(ctx, char_name, type, count=1):
 async def show_character_stat_display(ctx, char_name):
     char_name = char_name.lower()
 
-    chars_dict = bl.unpickle("Character_Stats.pkl")
+    guild_filename = bl.guild_filename(ctx.guild, ".pkl")
+    chars_dict = bl.unpickle(guild_filename)
     if (chars_dict == None) or (char_name not in chars_dict.keys()):
         await ctx.send(f"**Failed** The character {char_name} doesn't exist.")
         return
@@ -102,15 +103,16 @@ async def delete_char(ctx, char_name):
 @bot.command(name="CreateCharacter")
 async def create_character_stats_sheet(ctx, char_name=None, char_specific_stat=None):
     if char_name == None:
-        await ctx.send("Your Character needs a name\n Try !CreateCharacter \"Name\"")
+        await ctx.send("**Failed** Your Character needs a name\n Try !CreateCharacter \"Name\"")
         return
 
     if char_specific_stat== None:
         await ctx.send("**Failed** Your Character could use a personalized stat\nTry !CreateCharacter \"Character Name\" \"Name of Personalized Stat\"")
         return
 
+    guild_filename = bl.guild_filename(ctx.guild, ".pkl")
     caller_id = ctx.author.id
-    chars_dict = bl.unpickle("Character_Stats.pkl")
+    chars_dict = bl.unpickle(guild_filename)
     if chars_dict == None:
         chars_dict = {}
 
@@ -126,7 +128,7 @@ async def create_character_stats_sheet(ctx, char_name=None, char_specific_stat=N
         return
 
 
-    bl.repickle(chars_dict, "Character_Stats.pkl")
+    bl.repickle(chars_dict, guild_filename)
 
 
     await ctx.send(f"{char_name} created, with a personalized stat of {char_specific_stat}")
@@ -135,7 +137,10 @@ async def create_character_stats_sheet(ctx, char_name=None, char_specific_stat=N
 @bot.command(name="CharacterList")
 async def char_list_output(ctx):
 
-    chars_dict = bl.unpickle("Character_Stats.pkl")
+    guild_filename = bl.guild_filename(ctx.guild, ".pkl")
+    chars_dict = bl.unpickle(guild_filename)
+    if chars_dict == None:
+        await ctx.send("No charactes exist in this server right now!")
     output_string = "Characters in this server\n-----\n"
     for character in chars_dict.values():
         output_string += f"{character._name}: Personal Stat is *{character._chara_specific_type}*\n"
@@ -147,8 +152,10 @@ async def backup_char_data(ctx):
 
     chars_dict = bl.unpickle("Character_Stats.pkl")
     backup_text = ""
-    for character in chars_dict:
+    for character in chars_dict.values():
         backup_text += character.show_current_stats()
+
+    print(f"Backup text is {backup_text}")
 
     # Creates a readable overview of the character data
     backup_name = bl.create_backup_title(ctx.guild, ".txt")
@@ -166,6 +173,6 @@ async def backup_char_data(ctx):
 
 
 
-
+#Now the bot's event loop should be run! It begins!
 key = bl.get_key()
 bot.run(key)

@@ -11,11 +11,14 @@ from datetime import datetime
 import pickle
 from Character import *
 
-def create_guild_stats_title(guild):
+def guild_filename(guild, extension):
     """
     Creates the name of a file for a guild's character stats file
     """
-    return str(guild.id) + "STATS.pkl"
+    guild_title = guild.name + str(guild.id)
+    title = guild_title + "STATS" + extension
+    return title
+
 
 def create_backup_title(guild, extension):
     """
@@ -24,11 +27,11 @@ def create_backup_title(guild, extension):
     avoid any possible overwriting of files
     """
 
-    time = strftime("%d-%m-%Y %H.%M.%S")
+    cur_time = datetime.now()
+    time_title = cur_time.strftime("%d-%m-%Y %H.%M.%S")
     guild_title = guild.name + str(guild.id)
-    title = time + guild_title + "BACKUP" + extension
-
-
+    title = time_title + guild_title + "BACKUP" + extension
+    return title
 
 def is_char_owner(author, character)->bool:
     """
@@ -126,13 +129,18 @@ def unpickle(filename):
     Loads from a pickle file, unless the file is empty,
     and then it returns None
     """
-    with open(filename, "rb") as pkl_file:
-        try:
-            unpickled =  pickle.load(pkl_file)
-            return unpickled
-        except EOFError as e:
-            print(e)
-            return None
+    try:
+        with open(filename, "rb") as pkl_file:
+            try:
+                unpickled =  pickle.load(pkl_file)
+                return unpickled
+            except EOFError as e:
+                print(e)
+                return None
+    except FileNotFoundError as e:
+        print("File not found error happened when unpickling")
+        return None
+
 
 def repickle(obj, filename:str)->None:
     """
