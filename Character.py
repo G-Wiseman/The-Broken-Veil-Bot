@@ -34,10 +34,10 @@ class Character:
         stats_display += f"{self._chara_specific_type} : {self._chara_specific_count}\n"
         return stats_display
 
-    def get_owner_id():
+    def get_owner_id(self):
         return self.owner_id
 
-    def set_owner_id(new_id):
+    def set_owner_id(self, new_id):
         self.owner_id = new_id
 
     def get_name(self):

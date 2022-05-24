@@ -19,13 +19,6 @@ def guild_filename(guild, extension):
     title = guild_title + "STATS" + extension
     return title
 
-def character_exists(char_name:str, guild_filename:str) ->bool:
-    chars_dict = bl.unpickle(guild_filename)
-    char_name = char_name.lower()
-    if (chars_dict == None) or (char_name not in chars_dict.keys()):
-        return False
-    return True
-
 def set_get_type(type, character):
     alias_dict = create_alias_dict()
     setter = None

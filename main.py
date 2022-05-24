@@ -22,7 +22,6 @@ async def on_ready():
 async def on_message(message):
     if message.author == bot.user:
         return
-
     await bot.process_commands(message)
 
     if "<:Chihuaxander:951361274774716486>" in message.content and doggled:
@@ -61,7 +60,8 @@ async def blockChihuahua(ctx, switchDirection=None):
 async def logStats(ctx, char_name, type, count=1):
 
     guild_filename = bl.guild_filename(ctx.guild, ".pkl")
-    if not bl.character_exists(char_name, guild_filename):
+    chars_dict = bl.unpickle(guild_filename)
+    if (chars_dict == None) or (char_name.lower() not in chars_dict.keys()):
         await ctx.send(f"**Failed** The character {char_name} doesn't exist.")
         return
 
@@ -80,7 +80,8 @@ async def show_character_stat_display(ctx, char_name):
     char_name = char_name.lower()
 
     guild_filename = bl.guild_filename(ctx.guild, ".pkl")
-    if not bl.character_exists(char_name, guild_filename):
+    chars_dict = bl.unpickle(guild_filename)
+    if (chars_dict == None) or (char_name.lower() not in chars_dict.keys()):
         await ctx.send(f"**Failed** The character {char_name} doesn't exist.")
         return
 
@@ -96,13 +97,14 @@ async def unclaim_character(ctx, char_name):
     """
 
     guild_filename = bl.guild_filename(ctx.guild, ".pkl")
-    if not bl.character_exists(char_name, guild_filename):
+    chars_dict = bl.unpickle(guild_filename)
+    if (chars_dict == None) or (char_name.lower() not in chars_dict.keys()):
         await ctx.send(f"**Failed** The character {char_name} doesn't exist.")
         return
 
     character = chars_dict[char_name.lower()]
-    if character.get_owner_id != ctx.author.id:
-        await ctx.send(f"**Failed** This Character {char_name} does not belong to you!")
+    if character.get_owner_id() != ctx.author.id:
+        await ctx.send(f"**Failed** {char_name} does not belong to you!")
         return
 
     character.set_owner_id(None)
@@ -115,13 +117,14 @@ async def unclaim_character(ctx, char_name):
 @bot.command(name="ClaimCharacter")
 async def delete_char(ctx, char_name):
     guild_filename = bl.guild_filename(ctx.guild, ".pkl")
-    if not bl.character_exists(char_name, guild_filename):
+    chars_dict = bl.unpickle(guild_filename)
+    if (chars_dict == None) or (char_name.lower() not in chars_dict.keys()):
         await ctx.send(f"**Failed** The character {char_name} doesn't exist.")
         return
 
     character = chars_dict[char_name.lower()]
-    if character.get_owner_id != None:
-        await ctx.send(f"**Failed** This Character {char_name} is not claimable!")
+    if character.get_owner_id() != None:
+        await ctx.send(f"**Failed** {char_name} is not claimable!")
         return
 
     character.set_owner_id(ctx.author.id)
@@ -133,7 +136,9 @@ async def delete_char(ctx, char_name):
 
 @bot.command(name="DeleteCharacter")
 async def delete_char(ctx, char_name):
-    await ctx.send("Hasn't been implemented yet. Go bug George...")
+
+
+
     return
 
 @bot.command(name="CreateCharacter")
