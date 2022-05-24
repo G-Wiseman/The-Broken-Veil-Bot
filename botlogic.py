@@ -19,55 +19,56 @@ def guild_filename(guild, extension):
     title = guild_title + "STATS" + extension
     return title
 
-def set_get_type(type):
+def set_get_type(type, character):
+    alias_dict = create_alias_dict()
     setter = None
     getter = None
     official_type = None
 
     if type.lower() in alias_dict["kill_alias"]:
         official_type = "Kill"
-        getter = Character.get_kills
-        setter = Character.set_kills
+        getter = character.get_kills
+        setter = character.set_kills
 
     elif type.lower() in alias_dict["unconc_alias"]:
         official_type = "Time Unconscious"
-        getter = Character.get_uncon
-        setter = Character.set_unconc
+        getter = character.get_uncon
+        setter = character.set_unconc
 
     elif type.lower() in alias_dict["death_alias"]:
         official_type = "Death"
-        getter = Character.get_deaths
-        setter = Character.set_deaths
+        getter = character.get_deaths
+        setter = character.set_deaths
 
     elif type.lower() in alias_dict["final_alias"]:
         official_type = "\"How do you want to this\""
-        getter = Character.get_finals
-        setter = Character.set_finals
+        getter = character.get_finals
+        setter = character.set_finals
 
     elif type.lower() in alias_dict["max_damage_alias"]:
-        getter = Character.get_max_damage
-        setter = Character.set_max_damage
+        getter = character.get_max_damage
+        setter = character.set_max_damage
         official_type = "Damage in a single turn"
 
     elif type.lower() in alias_dict["healing_alias"]:
         official_type = "Healing dealt"
-        getter = Character.get_healing
-        setter = Character.set_healing
+        getter = character.get_healing
+        setter = character.set_healing
 
     elif type.lower() in alias_dict["crit_success_alias"]:
         official_type = "Natural Twenty"
-        getter = Character.get_crit_success
-        setter = Character.set_crit_success
+        getter = character.get_crit_success
+        setter = character.set_crit_success
 
     elif type.lower() in alias_dict["crit_fail_alias"]:
         official_type = "Natural One"
-        getter = Character.get_crit_fail
-        setter = Character.set_crit_fail
+        getter = character.get_crit_fail
+        setter = character.set_crit_fail
 
     elif type.lower() == character._chara_specific_type.lower():
         official_type = character._chara_specific_type
-        setter = Character.set_spec_count
-        getter = Character.get_spec_count
+        setter = character.set_spec_count
+        getter = character.get_spec_count
 
     return setter, getter, official_type
 
@@ -119,49 +120,21 @@ def create_alias_dict():
     }
     return alias_dict
 
-def handle_log(character, type, count):
+def handle_log(character, type, new_value):
     """
     Handles the logging stats logic.
     """
+    setter, getter, logged_type = set_get_type(type, character)
 
-    alias_dict = create_alias_dict()
-    logged_type = None
-    if type.lower() in alias_dict["kill_alias"]:
-        logged_type = "Kill"
-        character._kills += count
+    if logged_type == "Damage in a single turn":
+        cur_value = getter()
+        if cur_value < new_value:
+            setter(new_value)
 
-    elif type.lower() in alias_dict["unconc_alias"]:
-        logged_type = "Time Unconscious"
-        character._unconc += count
-
-    elif type.lower() in alias_dict["death_alias"]:
-        logged_type = "Death"
-        character._deaths += count
-
-    elif type.lower() in alias_dict["final_alias"]:
-        logged_type = "\"How do you want to this\""
-        character._final_kills += count
-
-    elif type.lower() in alias_dict["max_damage_alias"]:
-        if character._max_damage_dealt < count:
-            character._max_damage_dealt = count
-        logged_type = "Damage in a single turn"
-
-    elif type.lower() in alias_dict["healing_alias"]:
-        logged_type = "Healing dealt"
-        character._healing_dealt += count
-
-    elif type.lower() in alias_dict["crit_success_alias"]:
-        logged_type = "Natural Twenty"
-        character._crit_success += count
-
-    elif type.lower() in alias_dict["crit_fail_alias"]:
-        logged_type = "Natural One"
-        character._crit_fail += count
-
-    elif type.lower() == character._chara_specific_type.lower():
-        logged_type = character._chara_specific_type
-        character._chara_specific_count += count
+    else:
+        cur_value = getter()
+        new_value += cur_value
+        setter(new_value)
 
     return character, logged_type
 
