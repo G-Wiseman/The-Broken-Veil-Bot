@@ -34,6 +34,48 @@ class Character:
         stats_display += f"{self._chara_specific_type} : {self._chara_specific_count}\n"
         return stats_display
 
+    def get_name(self):
+        return self.name
+
+    def get_kills(self):
+        return self._kills
+    def set_kills(self, new_value:int):
+        self._kills = new_value
+
+    def get_unconc(self):
+        return self._unconc
+    def set_unconc(self, new_value:int):
+        self._unconc = new_value
+
+    def get_deaths(self):
+        return self._deaths
+    def set_deaths(self, new_value:int):
+        self._deaths = new_value
+
+    def get_finals(self):
+        return self._final_kills
+    def set_finals(self, new_value:int):
+        self._final_kills = new_value
+
+    def get_max_damage(self):
+        return self._max_damage_dealt
+    def set_max_damage(self, new_value:int):
+        self._max_damage_dealt = new_value
+
+    def get_healing(self):
+        return self._healing_dealt
+    def set_healing(self, new_value:int):
+        self._healing_dealt = new_value
+
+    def get_crit_success(self):
+        return self._crit_success
+    def set_crit_success(self, new_value:int):
+        self._crit_success = new_value
+
+    def get_crit_fail(self):
+        return self._crit_fail
+    def set_deaths(self, new_value:int):
+        self._crit_fail = new_value
 
 def remake_char(old_char)->Character:
     """
