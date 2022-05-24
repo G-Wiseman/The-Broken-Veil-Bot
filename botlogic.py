@@ -19,7 +19,6 @@ def guild_filename(guild, extension):
     title = guild_title + "STATS" + extension
     return title
 
-
 def create_backup_title(guild, extension):
     """
     Creates a back-up file title, based on the
@@ -141,7 +140,6 @@ def unpickle(filename):
         print("File not found error happened when unpickling")
         return None
 
-
 def repickle(obj, filename:str)->None:
     """
     Stores a Python object into a pkl file. Overwrites anything currently
@@ -149,6 +147,21 @@ def repickle(obj, filename:str)->None:
     """
     with open(filename, "wb") as pkl_file:
             pickle.dump(obj, pkl_file, -1)
+
+def char_class_refresh(guilds):
+    for guild in guilds:
+        filename = guild_filename(guild, ".pkl")
+        chars_dict = unpickle(filename)
+        if chars_dict != None:
+            new_dict = {}
+            for character in chars_dict.values():
+                new_char = remake_char(character)
+                single_dict = {new_char._name: new_char}
+                new_dict.update(single_dict)
+            repickle(new_dict, filename)
+
+
+
 
 def rollstats() -> str:
     string = "Stats are\n-----------\n"

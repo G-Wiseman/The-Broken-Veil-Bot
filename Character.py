@@ -19,7 +19,7 @@ class Character:
         self._chara_specific_type = specific_stat
 
     def __repr__(self) -> str:
-        return f"Character named {self._name}"
+        return f"Character with name {self._name}"
 
     def show_current_stats(self) -> str:
         dashline = '--'*len(self._name)

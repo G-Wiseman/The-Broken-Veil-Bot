@@ -15,6 +15,8 @@ bot.name = "The Broken Veil"
 @bot.event
 async def on_ready():
     print(f"We have logged in as {bot.name}".format())
+    bl.char_class_refresh(bot.guilds)
+    print(f"All Guilds have refreshed the characters")
 
 @bot.event
 async def on_message(message):
@@ -78,7 +80,6 @@ async def logStats(ctx, char_name, type, count=1):
     chars_dict[char_name] = updated_char
 
     bl.repickle(chars_dict, guild_filename)
-
     await ctx.send(f"{count} {logged_type}(s) has been logged for {char_name}")
     return
 
@@ -150,7 +151,8 @@ async def char_list_output(ctx):
 @bot.command(name="BackupData")
 async def backup_char_data(ctx):
 
-    chars_dict = bl.unpickle("Character_Stats.pkl")
+    guild_filename = bl.guild_filename(ctx.guild, ".pkl")
+    chars_dict = bl.unpickle(guild_filename)
     backup_text = ""
     for character in chars_dict.values():
         backup_text += character.show_current_stats()
@@ -159,7 +161,7 @@ async def backup_char_data(ctx):
 
     # Creates a readable overview of the character data
     backup_name = bl.create_backup_title(ctx.guild, ".txt")
-    with open(backup_name, "w+") as backup_file:
+    with open("BACKUPS/"+backup_name, "w+") as backup_file:
         backup_file.write(backup_text)
 
     #Creates a back up of the pkl file as well
@@ -167,10 +169,6 @@ async def backup_char_data(ctx):
     bl.repickle(chars_dict, backup_pickle_name)
 
     await ctx.send(f"Created back up files {backup_name} and {backup_pickle_name}")
-
-
-
-
 
 
 #Now the bot's event loop should be run! It begins!
