@@ -34,9 +34,14 @@ class Character:
         stats_display += f"{self._chara_specific_type} : {self._chara_specific_count}\n"
         return stats_display
 
-    def get_name(self):
-        return self.name
+    def get_owner_id():
+        return self.owner_id
 
+    def set_owner_id(new_id):
+        self.owner_id = new_id
+
+    def get_name(self):
+        return self._name
     def get_kills(self):
         return self._kills
     def set_kills(self, new_value:int):
@@ -94,7 +99,7 @@ def remake_char(old_char)->Character:
     made to the Character class, without the pickled data being
     "left behind".
     Returns a new character object that matches the character object
-    passed, but with any new changes to the Character Class reflected.
+    passed, but with any new methods added to the Character Class reflected.
     """
 
     char_name = old_char._name
