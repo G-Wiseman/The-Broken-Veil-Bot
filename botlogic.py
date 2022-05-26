@@ -23,8 +23,9 @@ def get_leaderboard_list(guild):
         new_tup = (stat_value, character)
         character_stat_list.append(new_tup)
 
-    character_stat_list.sort()
-    return character_stat_list
+    character_stat_list.sort(reverse=True)
+
+    return character_stat_list, official_type
 
 def guild_filename(guild, extension):
     """
@@ -41,17 +42,17 @@ def set_get_type(type):
     official_type = None
 
     if type.lower() in alias_dict["kill_alias"]:
-        official_type = "Kill"
+        official_type = "Kills"
         getter = Character.get_kills
         setter = Character.set_kills
 
     elif type.lower() in alias_dict["unconc_alias"]:
-        official_type = "Time Unconscious"
+        official_type = "Times Unconscious"
         getter = Character.get_unconc
         setter = Character.set_unconc
 
     elif type.lower() in alias_dict["death_alias"]:
-        official_type = "Death"
+        official_type = "Deaths"
         getter = Character.get_deaths
         setter = Character.set_deaths
 
@@ -71,12 +72,12 @@ def set_get_type(type):
         setter = Character.set_healing
 
     elif type.lower() in alias_dict["crit_success_alias"]:
-        official_type = "Natural Twenty"
+        official_type = "Natural Twenties"
         getter = Character.get_crit_success
         setter = Character.set_crit_success
 
     elif type.lower() in alias_dict["crit_fail_alias"]:
-        official_type = "Natural One"
+        official_type = "Natural Ones"
         getter = Character.get_crit_fail
         setter = Character.set_crit_fail
 
