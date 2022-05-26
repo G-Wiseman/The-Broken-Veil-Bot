@@ -21,6 +21,9 @@ class Character:
     def __repr__(self) -> str:
         return f"Character with name {self._name}"
 
+    def __lt__(self, other):
+        return self._name <= other._name
+
     def show_current_stats(self) -> str:
         dashline = '--'*len(self._name)
         stats_display = f"{self._name}\n{dashline}\n"
