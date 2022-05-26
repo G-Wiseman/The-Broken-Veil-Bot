@@ -11,6 +11,21 @@ from datetime import datetime
 import pickle
 from Character import *
 
+def get_leaderboard_list(guild):
+    guild_filename = guild_filename(guild, ".pkl")
+    chars_dict = unpickle(guild_filename)
+
+    setter, getter, official_type = set_get_type(stat_type)
+
+    character_stat_list = []
+    for character in chars_dict.values():
+        stat_value = getter(character)
+        new_tup = (stat_value, character)
+        character_stat_list.append(new_tup)
+
+    character_stat_list.sort()
+    return character_stat_list
+
 def guild_filename(guild, extension):
     """
     Creates the name of a file for a guild's character stats file
