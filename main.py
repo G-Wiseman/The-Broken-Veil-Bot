@@ -12,7 +12,6 @@ doggled = False #The "Doggle" is the toggle to remove any messages with the anno
 bot = commands.Bot(command_prefix='!', case_insensitive=True)
 bot.name = "The Broken Veil"
 
-
 @bot.event
 async def on_ready():
     print(f"We have logged in as {bot.name}")
@@ -27,9 +26,6 @@ async def on_message(message):
 
     if "<:Chihuaxander:951361274774716486>" in message.content and doggled:
         await message.delete()
-@bot.command(name="at_test")
-async def attest(ctx, the_at):
-    print(the_at)
 
 @bot.command()
 async def ping(ctx):
@@ -87,6 +83,23 @@ async def show_character_stat_display(ctx, char_name):
 
     character = chars_dict[char_name]
     await ctx.send(character.show_current_stats())
+
+@bot.command(name="Leaderboard")
+async def leaderboard(ctx, stat_type):
+    """
+    Shows the leader board for a specified stat
+    Will show the rankings for each character, and
+    the number they have in that stat type.
+    """
+
+    sorted_stats, official_type = bl.get_leaderboard_list(ctx.guild, stat_type)
+    output_message = f"Leaderboard for {official_type}\n"
+    for stat_char_tup in sorted_stats:
+        stat_value = stat_char_tup[0]
+        character = stat_char_tup[1]
+        output_message += f"{character.get_name()} has {stat_value} {official_type}\n"
+
+    await ctx.send(output_message)
 
 @bot.command(name="ReleaseCharacter")
 async def unclaim_character(ctx, char_name):
@@ -254,8 +267,6 @@ async def backup_char_data(ctx):
     bl.repickle(chars_dict, "BACKUPS/"+backup_pickle_name)
 
     await ctx.send(f"Created back up files {backup_name} and {backup_pickle_name}")
-
-
 
 ### Some None Command Bot Functions
 async def handle_mention(input_mention):
