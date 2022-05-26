@@ -134,6 +134,33 @@ async def delete_char(ctx, char_name):
     await ctx.send(f"{char_name} now belongs to {ctx.author.name}")
     return
 
+@bot.command(name = "GiveCharacter")
+async def give_char(ctx, char_name, mention):
+    """
+    Give a character, that belongs to you, to someone else who you mention.
+    !GiveCharacter character-name @username
+    """
+    guild_filename = bl.guild_filename(ctx.guild, ".pkl")
+    chars_dict = bl.unpickle(guild_filename)
+    if (chars_dict == None) or (char_name.lower() not in chars_dict.keys()):
+        await ctx.send(f"**Failed** The character {char_name} doesn't exist.")
+        return
+
+    character = chars_dict[char_name.lower()]
+    if character.get_owner_id() != ctx.author.id:
+        await ctx.send(f"**Failed** {char_name} is not yours to give!")
+        return
+
+    recieving_user = await handle_mention(mention)
+    if recieving_user == None:
+        await ctx.send("**Failed** You need to mention (@) someone to give them your character!")
+
+    character.set_owner_id(recieving_user.id)
+    chars_dict[char_name.lower()] = character
+    bl.repickle(chars_dict, guild_filename)
+
+    await ctx.send(f"{char_name} now belongs to {recieving_user.name}")
+    return
 
 @bot.command(name="DeleteCharacter")
 async def delete_char(ctx, char_name):
