@@ -34,7 +34,7 @@ def guild_filename(guild, extension):
     title = guild_title + "STATS" + extension
     return title
 
-def set_get_type(type, character):
+def set_get_type(type):
     alias_dict = create_alias_dict()
     setter = None
     getter = None
@@ -79,11 +79,6 @@ def set_get_type(type, character):
         official_type = "Natural One"
         getter = Character.get_crit_fail
         setter = Character.set_crit_fail
-
-    elif type.lower() == character._chara_specific_type.lower():
-        official_type = character._chara_specific_type
-        setter = Character.set_spec_count
-        getter = Character.get_spec_count
 
     print(setter)
     return setter, getter, official_type
@@ -139,7 +134,13 @@ def handle_log(character, type, new_value):
     """
     Handles the logging stats logic.
     """
-    setter, getter, logged_type = set_get_type(type, character)
+    if type.lower() == character._chara_specific_type.lower():
+        official_type = character._chara_specific_type
+        setter = Character.set_spec_count
+        getter = Character.get_spec_count
+
+    else:
+        setter, getter, logged_type = set_get_type(type)
 
     if logged_type == "Damage in a single turn":
         cur_value = getter(character)
