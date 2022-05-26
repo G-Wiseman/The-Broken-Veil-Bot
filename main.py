@@ -5,6 +5,7 @@ import os
 import botlogic as bl
 import pickle
 import datetime
+import re
 from Character import *
 
 doggled = False #The "Doggle" is the toggle to remove any messages with the annoying dog emoji when it is toggled on
@@ -133,6 +134,7 @@ async def delete_char(ctx, char_name):
     await ctx.send(f"{char_name} now belongs to {ctx.author.name}")
     return
 
+
 @bot.command(name="DeleteCharacter")
 async def delete_char(ctx, char_name):
     guild_filename = bl.guild_filename(ctx.guild, ".pkl")
@@ -225,6 +227,26 @@ async def backup_char_data(ctx):
     bl.repickle(chars_dict, "BACKUPS/"+backup_pickle_name)
 
     await ctx.send(f"Created back up files {backup_name} and {backup_pickle_name}")
+
+
+
+### Some None Command Bot Functions
+async def handle_mention(input_mention):
+    """
+    Takes the <@NUMBERS> generated with a mention, and
+    returns a discord.user object. If the input string is not
+    valid mentions, returns None.
+    """
+    regex = re.match("<@(.*)>", input_mention)
+
+    user_id = regex.group(1)
+    try:
+        user = await bot.fetch_user(user_id)
+    except  discord.NotFound as e:
+        print(e)
+        return None
+
+    return user
 
 
 #Now the bot's event loop should be run! It begins!
