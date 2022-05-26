@@ -30,7 +30,6 @@ async def on_message(message):
 async def attest(ctx, the_at):
     print(the_at)
 
-
 @bot.command()
 async def ping(ctx):
 	await ctx.send("<:legham:939388158443941898>")
@@ -136,9 +135,21 @@ async def delete_char(ctx, char_name):
 
 @bot.command(name="DeleteCharacter")
 async def delete_char(ctx, char_name):
+    guild_filename = bl.guild_filename(ctx.guild, ".pkl")
+    chars_dict = bl.unpickle(guild_filename)
+    if (chars_dict == None) or (char_name.lower() not in chars_dict.keys()):
+        await ctx.send(f"**Failed** The character {char_name} doesn't exist.")
+        return
 
+    character = chars_dict[char_name.lower()]
+    if character.get_owner_id() != ctx.author.id:
+        await ctx.send(f"**Failed** {char_name} does not belong to you!")
+        return
 
+    del chars_dict[char_name.lower()]
+    bl.repickle(chars_dict, guild_filename)
 
+    await ctx.send(f"{char_name} no longer exists. So long and thanks for all the fish!")
     return
 
 @bot.command(name="CreateCharacter")
@@ -176,15 +187,22 @@ async def create_character_stats_sheet(ctx, char_name=None, char_specific_stat=N
     return
 
 @bot.command(name="CharacterList")
-async def char_list_output(ctx):
+async def char_list_output(ctx, keyword=None):
 
     guild_filename = bl.guild_filename(ctx.guild, ".pkl")
     chars_dict = bl.unpickle(guild_filename)
     if chars_dict == None:
         await ctx.send("No charactes exist in this server right now!")
     output_string = "Characters in this server\n-----\n"
-    for character in chars_dict.values():
-        output_string += f"{character._name}: Personal Stat is *{character._chara_specific_type}*\n"
+
+    if keyword == None:
+        for character in chars_dict.values():
+            output_string += f"{character._name}: Personal Stat is *{character._chara_specific_type}*\n"
+
+    elif keyword.lower() == "mine":
+        for character in chars_dict.values():
+            if character.get_owner_id() == ctx.author.id:
+                output_string += f"{character._name}: Personal Stat is *{character._chara_specific_type}*\n"
 
     await ctx.send(output_string)
 

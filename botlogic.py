@@ -32,7 +32,7 @@ def set_get_type(type, character):
 
     elif type.lower() in alias_dict["unconc_alias"]:
         official_type = "Time Unconscious"
-        getter = Character.get_uncon
+        getter = Character.get_unconc
         setter = Character.set_unconc
 
     elif type.lower() in alias_dict["death_alias"]:
