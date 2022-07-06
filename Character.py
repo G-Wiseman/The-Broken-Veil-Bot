@@ -39,7 +39,6 @@ class Character:
 
     def get_owner_id(self):
         return self.owner_id
-
     def set_owner_id(self, new_id):
         self.owner_id = new_id
 
@@ -85,12 +84,9 @@ class Character:
     def set_crit_fail(self, new_value:int):
         self._crit_fail = new_value
 
-    def set_deaths(self, new_value:int):
-        self._crit_fail = new_value
-
     def get_spec_type(self):
         return self._chara_specific_type
-    def set_deaths(self, new_value:str):
+    def set_spec_type(self, new_value:str):
         self._chara_specific_type = new_value
 
     def get_spec_count(self):
