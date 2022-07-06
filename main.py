@@ -128,7 +128,7 @@ async def unclaim_character(ctx, char_name):
     return
 
 @bot.command(name="ClaimCharacter")
-async def delete_char(ctx, char_name):
+async def claim_char(ctx, char_name):
     guild_filename = bl.guild_filename(ctx.guild, ".pkl")
     chars_dict = bl.unpickle(guild_filename)
     if (chars_dict == None) or (char_name.lower() not in chars_dict.keys()):

@@ -82,6 +82,9 @@ class Character:
 
     def get_crit_fail(self):
         return self._crit_fail
+    def set_crit_fail(self, new_value:int):
+        self._crit_fail = new_value
+
     def set_deaths(self, new_value:int):
         self._crit_fail = new_value
 

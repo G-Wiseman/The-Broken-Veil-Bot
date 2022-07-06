@@ -122,9 +122,10 @@ def handle_log(character, type, new_value):
     Handles the logging stats logic.
     """
     if type.lower() == character._chara_specific_type.lower():
-        official_type = character._chara_specific_type
+        logged_type = character._chara_specific_type
         setter = Character.set_spec_count
         getter = Character.get_spec_count
+
 
     else:
         setter, getter, logged_type = set_get_type(type)

@@ -10,10 +10,11 @@ def roll(num_dice, num_sides):
 def four_six_drop():
     list = []
     for i in range(0,4):
-        list.append(roll(1,6))
+        list.append(random.randint(1,6))
 
-    list.sort()
-    dropped = list.pop(0)
+
+    dropped = min(list)
+    list.remove(dropped)
     return (dropped, list)
 
 def roll_print_single(num_dice, num_sides):
