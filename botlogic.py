@@ -117,18 +117,18 @@ def create_alias_dict():
     }
     return alias_dict
 
-def handle_log(character, type, new_value):
+def handle_log(character, type_stat, new_value):
     """
     Handles the logging stats logic.
     """
-    if type.lower() == character._chara_specific_type.lower():
+    if type_stat.lower() == character._chara_specific_type.lower():
         logged_type = character._chara_specific_type
         setter = Character.set_spec_count
         getter = Character.get_spec_count
 
 
     else:
-        setter, getter, logged_type = set_get_type(type)
+        setter, getter, logged_type = set_get_type(type_stat)
 
     if logged_type == "Damage in a single turn":
         cur_value = getter(character)
