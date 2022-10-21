@@ -6,10 +6,17 @@ import botlogic as bl
 import pickle
 import datetime
 import re
+from StatButtons import *
 from Character import *
 
 doggled = False #The "Doggle" is the toggle to remove any messages with the annoying dog emoji when it is toggled on
-bot = commands.Bot(command_prefix='!', case_insensitive=True)
+
+# New Discord.py 2.0.0 intents needed for Bot
+intents = discord.Intents(messages=True, guilds=True)
+intents.message_content = True
+intents.reactions=True
+
+bot = commands.Bot(command_prefix='!', case_insensitive=True, intents=intents)
 bot.name = "The Broken Veil"
 
 @bot.event
@@ -53,29 +60,27 @@ async def blockChihuahua(ctx, switchDirection=None):
     await ctx.send(f"The blocking has been doggled {on_off}")
 
 @bot.command(name="Log")
-async def logStats(ctx, char_name, type, count=1):
+async def logStats(ctx, char_name):
 
-    guild_filename = bl.guild_filename(ctx.guild, ".pkl")
+    guild_filename = bl.guild_filename(ctx.guild, "STATS" ,".pkl")
     chars_dict = bl.unpickle(guild_filename)
     if (chars_dict == None) or (char_name.lower() not in chars_dict.keys()):
         await ctx.send(f"**Failed** The character {char_name} doesn't exist.")
         return
+    character = chars_dict[char_name.lower()]
+    specific_stat = character._chara_specific_type
 
-    found_char = chars_dict[char_name.lower()]
 
-    updated_char, logged_type = bl.handle_log(found_char, type, count)
+    view = LogStatButtons(char_name, specific_stat, ctx.guild)
+    view.message = await ctx.send(f"***{char_name}***", view=view)
 
-    chars_dict[char_name] = updated_char
-
-    bl.repickle(chars_dict, guild_filename)
-    await ctx.send(f"{count} {logged_type}(s) has been logged for {updated_char.get_name()}")
     return
 
 @bot.command(name="ShowStats")
 async def show_character_stat_display(ctx, char_name):
     char_name = char_name.lower()
 
-    guild_filename = bl.guild_filename(ctx.guild, ".pkl")
+    guild_filename = bl.guild_filename(ctx.guild, "STATS" ,".pkl")
     chars_dict = bl.unpickle(guild_filename)
     if (chars_dict == None) or (char_name.lower() not in chars_dict.keys()):
         await ctx.send(f"**Failed** The character {char_name} doesn't exist.")
@@ -85,21 +90,23 @@ async def show_character_stat_display(ctx, char_name):
     await ctx.send(character.show_current_stats())
 
 @bot.command(name="Leaderboard")
-async def leaderboard(ctx, stat_type):
+async def leaderboard(ctx):
     """
     Shows the leader board for a specified stat
     Will show the rankings for each character, and
     the number they have in that stat type.
     """
 
-    sorted_stats, official_type = bl.get_leaderboard_list(ctx.guild, stat_type)
-    output_message = f"Leaderboard for {official_type}\n"
-    for stat_char_tup in sorted_stats:
-        stat_value = stat_char_tup[0]
-        character = stat_char_tup[1]
-        output_message += f"{character.get_name()} has {stat_value} {official_type}\n"
-
-    await ctx.send(output_message)
+    view = LeaderBoardMenu(ctx.guild)
+    view.message = await ctx.send("What stat would you like to see the Leaderboard for?", view = view)
+    # sorted_stats, official_type = bl.get_leaderboard_list(ctx.guild, stat_type)
+    # output_message = f"Leaderboard for {official_type}\n"
+    # for stat_char_tup in sorted_stats:
+    #     stat_value = stat_char_tup[0]
+    #     character = stat_char_tup[1]
+    #     output_message += f"{character.get_name()} has {stat_value} {official_type}\n"
+    #
+    # await ctx.send(output_message)
 
 @bot.command(name="ReleaseCharacter")
 async def unclaim_character(ctx, char_name):
@@ -109,7 +116,7 @@ async def unclaim_character(ctx, char_name):
     character as their own.
     """
 
-    guild_filename = bl.guild_filename(ctx.guild, ".pkl")
+    guild_filename = bl.guild_filename(ctx.guild, "STATS" ,".pkl")
     chars_dict = bl.unpickle(guild_filename)
     if (chars_dict == None) or (char_name.lower() not in chars_dict.keys()):
         await ctx.send(f"**Failed** The character {char_name} doesn't exist.")
@@ -129,7 +136,7 @@ async def unclaim_character(ctx, char_name):
 
 @bot.command(name="ClaimCharacter")
 async def claim_char(ctx, char_name):
-    guild_filename = bl.guild_filename(ctx.guild, ".pkl")
+    guild_filename = bl.guild_filename(ctx.guild, "STATS" ,".pkl")
     chars_dict = bl.unpickle(guild_filename)
     if (chars_dict == None) or (char_name.lower() not in chars_dict.keys()):
         await ctx.send(f"**Failed** The character {char_name} doesn't exist.")
@@ -153,7 +160,7 @@ async def give_char(ctx, char_name, mention):
     Give a character, that belongs to you, to someone else who you mention.
     !GiveCharacter character-name @username
     """
-    guild_filename = bl.guild_filename(ctx.guild, ".pkl")
+    guild_filename = bl.guild_filename(ctx.guild, "STATS" ,".pkl")
     chars_dict = bl.unpickle(guild_filename)
     if (chars_dict == None) or (char_name.lower() not in chars_dict.keys()):
         await ctx.send(f"**Failed** The character {char_name} doesn't exist.")
@@ -177,7 +184,7 @@ async def give_char(ctx, char_name, mention):
 
 @bot.command(name="DeleteCharacter")
 async def delete_char(ctx, char_name):
-    guild_filename = bl.guild_filename(ctx.guild, ".pkl")
+    guild_filename = bl.guild_filename(ctx.guild, "STATS" ,".pkl")
     chars_dict = bl.unpickle(guild_filename)
     if (chars_dict == None) or (char_name.lower() not in chars_dict.keys()):
         await ctx.send(f"**Failed** The character {char_name} doesn't exist.")
@@ -204,7 +211,7 @@ async def create_character_stats_sheet(ctx, char_name=None, char_specific_stat=N
         await ctx.send("**Failed** Your Character could use a personalized stat\nTry !CreateCharacter \"Character Name\" \"Name of Personalized Stat\"")
         return
 
-    guild_filename = bl.guild_filename(ctx.guild, ".pkl")
+    guild_filename = bl.guild_filename(ctx.guild, "STATS" ,".pkl")
     caller_id = ctx.author.id
     chars_dict = bl.unpickle(guild_filename)
     if chars_dict == None:
@@ -231,7 +238,7 @@ async def create_character_stats_sheet(ctx, char_name=None, char_specific_stat=N
 @bot.command(name="CharacterList")
 async def char_list_output(ctx, keyword=None):
 
-    guild_filename = bl.guild_filename(ctx.guild, ".pkl")
+    guild_filename = bl.guild_filename(ctx.guild, "STATS" ,".pkl")
     chars_dict = bl.unpickle(guild_filename)
     if chars_dict == None:
         await ctx.send("No charactes exist in this server right now!")
@@ -251,7 +258,7 @@ async def char_list_output(ctx, keyword=None):
 @bot.command(name="Backup")
 async def backup_char_data(ctx):
 
-    guild_filename = bl.guild_filename(ctx.guild, ".pkl")
+    guild_filename = bl.guild_filename(ctx.guild, "STATS" ,".pkl")
     chars_dict = bl.unpickle(guild_filename)
     backup_text = ""
     for character in chars_dict.values():
@@ -268,7 +275,7 @@ async def backup_char_data(ctx):
 
     await ctx.send(f"Created back up files {backup_name} and {backup_pickle_name}")
 
-### Some None Command Bot Functions
+### Some Non Command Bot Functions
 async def handle_mention(input_mention):
     """
     Takes the <@NUMBERS> generated with a mention, and
